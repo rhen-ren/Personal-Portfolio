@@ -1,6 +1,7 @@
 from nicegui import ui, app
 import asyncio
 import time
+import os
 import random
 
 app.colors(primary="#39FF14")
@@ -227,4 +228,7 @@ def home():
                          
                 
 
-ui.run()
+ui.run(
+    host='0.0.0.0',
+    port=int(os.environ.get('PORT', 10000))
+)

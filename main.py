@@ -214,8 +214,8 @@ def home():
                 with ui.row().style("width: 100%; justify-content: center;"):
 
                     with ui.column().style("width: 50%"):
-                        ui.label("Have a question or want to work together? Send me an email.").style("color: white; font-size: 20px; font-family: monospace;")
-                        ui.label("Send me an email.").style("color: white; font-size: 20px; font-family: monospace;")
+                        ui.label("Have a question or want to work together?").style("color: white; font-size: 20px; font-family: monospace;")
+                        ui.label("Send me an email.").style("color: white; font-size: 20px; font-family: monospace; text-decoration: underline; text-decoration-color: white;")
 
                         name: ui.input = ui.input(label="Your name").classes("contact-input").style("width: 100%;")
                         email: ui.input = ui.input(label="Your email").classes("contact-input").style("width: 100%;")

@@ -34,10 +34,12 @@ def projects():
     return projects
 
 def sendEmail(name: str, sender_email: str, message: str):
-    if not name:
+    if not sender_email:
         ui.notify("Enter your email!")
+        return
     if not message:
         ui.notify("Enter a message!")
+        return
 
     EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
     EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")

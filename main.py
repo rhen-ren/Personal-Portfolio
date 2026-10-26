@@ -58,7 +58,7 @@ def sendEmail(name: str, sender_email: str, message: str):
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.send_message(email)
     
-    ui.notify("Email Sent!")
+        ui.notify("Email Sent!")
 
 
 @ui.page("/")

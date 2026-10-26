@@ -3,6 +3,8 @@ import asyncio
 import time
 import os
 import random
+import smtplib
+from email.message import EmailMessage
 
 app.colors(primary="#39FF14")
 
@@ -31,7 +33,31 @@ def projects():
 
     return projects
 
-def sendEmail(name: str, email: str, message: str):
+def sendEmail(name: str, sender_email: str, message: str):
+    if not name:
+        ui.notify("Enter your email!")
+    if not message:
+        ui.notify("Enter a message!")
+
+    EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+
+    email = EmailMessage()
+    email["Subject"] = f"Portfolio Contact {name}"
+    email["From"] = EMAIL_ADDRESS
+    email["To"] = EMAIL_ADDRESS
+    email["Reply-To"] = sender_email
+
+    email.set_content(
+        f"From: {name}\n"
+        f"Email: {sender_email}\n\n"
+        f"{message}"
+    )
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(email)
+    
     ui.notify("Email Sent!")
 
 

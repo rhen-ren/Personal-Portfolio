@@ -1,10 +1,9 @@
-from nicegui import ui, app
+from nicegui import ui, app, run
 import asyncio
 import time
 import os
 import random
-import smtplib
-from email.message import EmailMessage
+import resend
 
 app.colors(primary="#39FF14")
 
@@ -34,6 +33,26 @@ def projects():
     return projects
 
 def sendEmail(name: str, sender_email: str, message: str):
+    resend.api_key = os.environ["RESEND_API_KEY"]
+    EMAIL = "nerfonala@gmail.com"
+
+    params = {
+        "from": "Portfolio Contact <onboarding@resend.dev>",
+        "to": [EMAIL],
+        "reply_to": sender_email,
+        "subject": f"Portfolio Contact: {name}",
+        "text": (
+            f"New message from your portfolio\n\n"
+            f"Name: {name}\n"
+            f"Email: {sender_email}\n\n"
+            f"Message:\n{message}"
+        ),
+    }
+
+    return resend.Emails.send(params)
+
+
+async def handle_send_email(name, sender_email, message):
     if not sender_email:
         ui.notify("Enter your email!")
         return
@@ -41,26 +60,11 @@ def sendEmail(name: str, sender_email: str, message: str):
         ui.notify("Enter a message!")
         return
 
-    EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
-    email = EmailMessage()
-    email["Subject"] = f"Portfolio Contact {name}"
-    email["From"] = EMAIL_ADDRESS
-    email["To"] = EMAIL_ADDRESS
-    email["Reply-To"] = sender_email
-
-    email.set_content(
-        f"From: {name}\n"
-        f"Email: {sender_email}\n\n"
-        f"{message}"
-    )
-
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        smtp.send_message(email)
-    
+    try:
+        await run.io_bound(sendEmail, name, sender_email, message)
         ui.notify("Email Sent!")
+    except Exception as e:
+        ui.notify("Failed to send email", type="negative")
 
 
 @ui.page("/")
@@ -248,7 +252,7 @@ def home():
                         name: ui.input = ui.input(label="Your name").classes("contact-input").style("width: 100%;")
                         email: ui.input = ui.input(label="Your email").classes("contact-input").style("width: 100%;")
                         message: ui.textarea = ui.textarea("Your message").classes("contact-text-area").style("width: 100%;")
-                        with ui.button(on_click=lambda: sendEmail(name, email, message) ).style("color: white;"):
+                        with ui.button(on_click=lambda: handle_send_email(name, email, message) ).style("color: white;"):
                             ui.label("Send Email")
                             ui.icon("send")
                         

@@ -34,7 +34,7 @@ def projects():
 
 def sendEmail(name: str, sender_email: str, message: str):
     resend.api_key = os.environ["RESEND_API_KEY"]
-    EMAIL = "nerfonala@gmail.com"
+    EMAIL = "zerotwo.alanofren@outlook.com"
 
     params = {
         "from": "Portfolio Contact <onboarding@resend.dev>",

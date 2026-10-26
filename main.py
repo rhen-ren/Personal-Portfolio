@@ -64,6 +64,7 @@ async def handle_send_email(name, sender_email, message):
         await run.io_bound(sendEmail, name, sender_email, message)
         ui.notify("Email Sent!")
     except Exception as e:
+        print(e)
         ui.notify("Failed to send email", type="negative")
 
 
@@ -252,7 +253,7 @@ def home():
                         name: ui.input = ui.input(label="Your name").classes("contact-input").style("width: 100%;")
                         email: ui.input = ui.input(label="Your email").classes("contact-input").style("width: 100%;")
                         message: ui.textarea = ui.textarea("Your message").classes("contact-text-area").style("width: 100%;")
-                        with ui.button(on_click=lambda: handle_send_email(name, email, message) ).style("color: white;"):
+                        with ui.button(on_click=lambda: handle_send_email(name.value, email.value, message.value) ).style("color: white;"):
                             ui.label("Send Email")
                             ui.icon("send")
                         
